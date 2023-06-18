@@ -7,5 +7,6 @@ add_executable(
   clana 
   src/clana.cpp 
   src/file.cpp
+  src/utils.cpp
 )
 target_include_directories(clana PRIVATE include)

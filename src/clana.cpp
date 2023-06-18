@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include "file.h"
+#include "utils.h"
 
 using namespace std;
 
@@ -15,7 +16,8 @@ int main () {
   // iterate over each input line
   string line;
   while (getline (infile, line)) {
-    cout << line << endl;
+    if (detect_headers(line))
+      cout << line;
   }
 
   infile.close();
@@ -25,9 +27,6 @@ int main () {
   outfile << "File I/O scaffold\n";
   outfile.close();
 
-  // for make testing 
-  cout << "4 + 6 is " << add(4,6) << endl;
-
-  cout << "Exiting";
+  cout << "Exiting" << endl;
   return 0;
 }

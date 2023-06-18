@@ -1,6 +1,7 @@
-#ifndef FILE_H
-#define FILE_H
+#ifndef CLANA_FILE_H
+#define CLANA_FILE_H
 
-int add(int x, int y); 
+struct Line;
+class File;
 
 #endif

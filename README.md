@@ -6,12 +6,10 @@ Aplicação para limpeza de dados, detecção de lacunas, obtenção de médias 
 
 ## Compiling from source
 
-[CMake](https://cmake.org/) version 3.0 or higher is needed in order to compile. It's available for several different operating systems.
+[CMake](https://cmake.org/) version 3.0 or higher is needed in order to compile.
 
-Once CMake is set up, you can proceed with the following steps:
-
-1. Download or clone this repository to your machine. The final path where you clone or extract the contents, where the file `CMakeLists.txt` as well as this `README.md` file are, will be referred to as the **source directory**.
-2. Create a destination directory for the compiled files. This is your **build directory** and can be anywhere in your system.
+1. Download or clone this repository to your machine. The directory where you place the contents of this repository, where the file `CMakeLists.txt` as well as this `README.md` file are, will be your **source directory**.
+2. Create a destination directory for the compiled files. This is your **build directory** and can be anywhere you want.
 3. In a terminal, execute the following command from the build directory:
 
 ```
@@ -36,4 +34,4 @@ The final output should be something like "[100%] Built target clana". Once you 
 ----
 Prototype developed for the Data Structures course, part of the Systems Analysis and Development program offered at the Federal Institute of São Paulo, Jacareí campus.
 
-Protótipo desenvolvido para a disciplina de Estrutura de Dados, curso de Análise e Desenvolvimento de Sistemas do Instituto Federal de São Paulo, câmpus Jacareí.
+Protótipo desenvolvido para a disciplina de Estrutura de Dados, curso de Análise e Desenvolvimento de Sistemas do Instituto Federal de São Paulo, campus Jacareí.

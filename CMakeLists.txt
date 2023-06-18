@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 11)
 
 add_executable(
   clana 
-  src/clana.cpp 
+  src/main.cpp
   src/file.cpp
   src/utils.cpp
 )

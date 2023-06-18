@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include "file.h"
+#include "line.h"
 #include "utils.h"
 
 using namespace std;
@@ -14,10 +15,10 @@ int main () {
   infile.open("in.txt");
 
   // iterate over each input line
-  string line;
-  while (getline (infile, line)) {
-    if (detect_headers(line))
-      cout << line;
+  string line_content;
+  while (getline (infile, line_content)) {
+    if (detect_headers(line_content))
+      cout << line_content;
   }
 
   infile.close();
@@ -26,6 +27,13 @@ int main () {
   outfile.open ("out.log");
   outfile << "File I/O scaffold\n";
   outfile.close();
+
+  // testing
+  File file;
+  file.addLine("Line 1");
+  file.addLine("Line 2");
+  file.addLine("Line 3");
+  file.print();
 
   cout << "Exiting" << endl;
   return 0;

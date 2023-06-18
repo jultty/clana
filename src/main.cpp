@@ -1,9 +1,5 @@
-#include <iostream>
 #include <fstream>
-#include <string>
 #include "file.h"
-#include "line.h"
-#include "utils.h"
 
 using namespace std;
 
@@ -12,7 +8,7 @@ int main () {
   // set up I/O stream
   ifstream infile;
   ofstream outfile;
-  infile.open("in.txt");
+  infile.open("in.csv");
 
   // iterate over each input line
   File file;

@@ -1,7 +1,6 @@
 #include <string>
 #include <iostream>
 #include "file.h"
-#include "line.h"
 #include "utils.h"
 
 using namespace std;
@@ -13,9 +12,37 @@ void File::add(string content) {
   Line *new_line = new Line;
   new_line->content = content;
 
+  // check if this line is the header
   if (detect_headers(content))
     header = new_line;
 
+  // map each observed value to a column
+  stringstream ss(content);
+  string observation;
+
+  while (getline(ss, observation, ';')) {
+    Field *new_field = new Field;
+
+    new_field->content = observation;
+    new_field->line = new_line;
+
+    // set first, last, previous and next
+    if (new_line->first_field == nullptr) {
+      new_field->column = 1;
+      new_line->first_field = new_field;
+      new_line->last_field = new_field;
+    }
+    else {
+      new_field->column = new_line->last_field->column + 1;
+      new_field->previous = new_line->last_field;
+      new_line->last_field->next = new_field;
+      new_line->last_field = new_field;
+    }
+
+    new_field->header = ""; // TODO
+  }
+
+  // set first, last, previous and next
   if (first == nullptr) {
     first = new_line;
     last = new_line;

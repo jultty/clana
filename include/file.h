@@ -9,12 +9,12 @@ class File {
 private:
   Line *first = nullptr;
   Line *last = nullptr;
+  Line *header = nullptr;
 
 public:
   File();
-  void addLine(string content);
-  void print();
-  void print_neighbors();
+  void add(string content);
+  void print(string option);
 };
 
 #endif

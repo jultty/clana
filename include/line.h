@@ -5,7 +5,7 @@
 using namespace std;
 
 struct Line {
-  int number = -1;
+  int row = -1;
   std::string content = "";
   Line *next = nullptr;
   Line *previous = nullptr;

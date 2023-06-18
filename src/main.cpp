@@ -15,26 +15,21 @@ int main () {
   infile.open("in.txt");
 
   // iterate over each input line
+  File file;
   string line_content;
-  while (getline (infile, line_content)) {
-    if (detect_headers(line_content))
-      cout << line_content;
-  }
+
+  while (getline (infile, line_content))
+    file.add(line_content);
 
   infile.close();
 
   // write output to a file
   outfile.open ("out.log");
-  outfile << "File I/O scaffold\n";
+  outfile << "File I/O OK\n";
   outfile.close();
 
-  // testing
-  File file;
-  file.addLine("Line 1");
-  file.addLine("Line 2");
-  file.addLine("Line 3");
-  file.print();
+  // print file contents
+  file.print("");
 
-  cout << "Exiting" << endl;
   return 0;
 }

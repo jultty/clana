@@ -9,10 +9,10 @@ using Field = struct Field;
 struct Line {
     int row = -1;
     string content = "";
-    Line *next = nullptr;
-    Line *previous = nullptr;
-    Field *first_field = nullptr;
-    Field *last_field = nullptr;
+    Line* next = nullptr;
+    Line* previous = nullptr;
+    Field* first_field = nullptr;
+    Field* last_field = nullptr;
 
 };
 

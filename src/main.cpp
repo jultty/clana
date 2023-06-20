@@ -25,7 +25,7 @@ int main () {
   outfile.close();
 
   // print file contents
-  file.print("");
+  // file.print("");
 
   return 0;
 }

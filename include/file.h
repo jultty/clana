@@ -9,9 +9,10 @@ using File = struct File;
 
 class File {
 private:
-  Line *header = nullptr;
-  Line *first = nullptr;
-  Line *last = nullptr;
+  Line* headers = nullptr;
+  Line* first = nullptr;
+  Line* last = nullptr;
+  int max_fields;
 
 public:
   File();

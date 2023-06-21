@@ -8,11 +8,11 @@ using namespace std;
 
 struct Field {
   int column = -1;
-  Line *line = nullptr;
-  string header = "";
   string content = "";
-  Field *next = nullptr;
-  Field *previous = nullptr;
+  string header = "";
+  Line* line = nullptr;
+  Field* next = nullptr;
+  Field* previous = nullptr;
 };
 
 #endif

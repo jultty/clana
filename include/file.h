@@ -8,15 +8,17 @@ using namespace std;
 using File = struct File;
 
 class File {
-private:
-  Line *header = nullptr;
-  Line *first = nullptr;
-  Line *last = nullptr;
+  private:
+    Line* first = nullptr;
+    Line* last = nullptr;
+    int max_fields;
 
-public:
-  File();
-  void add(string content);
-  void print(string option);
+  public:
+    Line* headers = nullptr;
+    File();
+    void add(string content);
+    void print(string option);
+    void print_interactively(string option);
 };
 
 #endif

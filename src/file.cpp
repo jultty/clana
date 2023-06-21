@@ -1,7 +1,5 @@
-#include <string>
-#include <iostream>
 #include "file.h"
-#include "utils.h"
+#include "header.h"
 
 using namespace std;
 
@@ -9,37 +7,44 @@ File::File() : first(nullptr), last(nullptr) {}
 
 void File::add(string content) {
 
-  Line *new_line = new Line;
+  Line* new_line = new Line;
   new_line->content = content;
+  int field_counter = 1;
 
   // check if this line is the header
-  if (detect_headers(content))
-    header = new_line;
+  if (detect_headers(content)) {
+    headers = new_line;
+    max_fields = count_headers(headers->content) + 1;
+  }
 
-  // map each observed value to a column
-  stringstream ss(content);
-  string observation;
+  // map each observed value to a field 
+  if (headers) {
 
-  while (getline(ss, observation, ';')) {
-    Field *new_field = new Field;
+    stringstream ss(content);
+    string observation;
 
-    new_field->content = observation;
-    new_field->line = new_line;
+    while (getline(ss, observation, ';') && field_counter <= max_fields) {
+      Field* new_field = new Field;
 
-    // set first, last, previous and next
-    if (new_line->first_field == nullptr) {
-      new_field->column = 1;
-      new_line->first_field = new_field;
-      new_line->last_field = new_field;
+      new_field->content = observation;
+      new_field->line = new_line;
+
+      // set first, last, previous and next
+      if (new_line->first_field == nullptr) {
+        new_field->column = 1;
+        new_line->first_field = new_field;
+        new_line->last_field = new_field;
+      }
+      else {
+        new_field->column = new_line->last_field->column + 1;
+        new_field->previous = new_line->last_field;
+        new_line->last_field->next = new_field;
+        new_line->last_field = new_field;
+      }
+
+      new_field->header = get_header(new_field->column, headers);
+      field_counter++;
     }
-    else {
-      new_field->column = new_line->last_field->column + 1;
-      new_field->previous = new_line->last_field;
-      new_line->last_field->next = new_field;
-      new_line->last_field = new_field;
-    }
-
-    new_field->header = ""; // TODO
   }
 
   // set first, last, previous and next
@@ -56,13 +61,39 @@ void File::add(string content) {
   }
 }
 
+// print all lines
 void File::print(string option) {
-  Line *current = first;
+  Line* current = first;
   if (option != "all")
-    current = header->next;
+    current = headers->next;
   while (current != nullptr) {
-    cout << current->row << ": ";
-    cout << current->content << endl;
+    cout << "Line " << current->row << ": " << current->content << endl;
     current = current->next;
+  }
+}
+
+void File::print_interactively(string option) {
+  Line* current = first;
+  if (option != "all")
+    current = headers->next;
+  while (current != nullptr) {
+    cout << "Line " << current->row << ": " << current->content << endl;
+
+    cout << "\n n: next line \n p: previous line \n any other key: exit\n > ";
+    char input;
+    cin >> input;
+    cout << "\n";
+
+
+    if (input == 'n') {
+      current = current->next;
+    } else if (input == 'p' && current->previous != nullptr) {
+      current = current->previous;
+    } else if (current->previous == nullptr) {
+      cout << " [!] Invalid position \n";
+    } else {
+      cout << " Exiting\n";
+      break;
+    }
   }
 }

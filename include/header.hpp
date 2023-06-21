@@ -5,6 +5,8 @@
 
 using namespace std;
 using Header = struct Header;
+using Line = struct Line;
+using Field = struct Field;
 
 struct Header {
   int column = -1;

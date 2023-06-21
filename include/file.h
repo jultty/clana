@@ -9,11 +9,11 @@ using File = struct File;
 
 class File {
   private:
-    Line* first = nullptr;
-    Line* last = nullptr;
     int max_fields;
 
   public:
+    Line* first = nullptr;
+    Line* last = nullptr;
     Line* headers = nullptr;
     File();
     void add(string content);

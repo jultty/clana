@@ -56,8 +56,10 @@ void File::add(string content) {
   else {
     new_line->row = last->row + 1;
     new_line->previous = last;
+    new_line->previous->is_last = false;
     last->next = new_line;
     last = new_line;
+    last->is_last = true;
   }
 }
 

@@ -8,5 +8,7 @@ add_executable(
   src/main.cpp
   src/file.cpp
   src/header.cpp
+  src/field.cpp
+  src/line.cpp
 )
 target_include_directories(clana PRIVATE include)

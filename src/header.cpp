@@ -17,7 +17,7 @@ void wait() {
 }
 
 // traverses a linked list of fields
-Field* traverse_line(Line* line, int start, int distance) {
+Field* traverse_fields(Line* line, int start, int distance) {
 
   Field* current_position = line->first_field;
 
@@ -40,7 +40,7 @@ string search_header(Line* headers, int target, int first, int last) {
 
   int pivot = (first + last) / 2;
   int distance = target - pivot;
-  Field* traversed_field = traverse_line(headers, pivot, distance);
+  Field* traversed_field = traverse_fields(headers, pivot, distance);
   string target_header = traversed_field->content;
 
   if (target > pivot) {
@@ -76,7 +76,7 @@ int count_headers(string content) {
 
 // search for a column by its header
 int get_column(string header, Line* headers) {
-  Field* start = traverse_line(headers, 1, 1);
+  Field* start = traverse_fields(headers, 1, 1);
 
   while (header != start->content) {
     start = start->next;

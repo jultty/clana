@@ -20,15 +20,11 @@ int main () {
 
   infile.close();
 
-  // write output to a file
-  outfile.open ("out.log");
-  outfile << "File I/O OK\n";
-  outfile.close();
-
-  // print mapped contents
+  //print mapped contents
   file.print("");
 
-  cout << "Chuva 22 is at column" << get_column("Chuva22", file.headers) << endl;
+  cout << "Chuva 22 is at column";
+  cout << get_column("Chuva22", file.headers) << endl;
 
   return 0;
 }

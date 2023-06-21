@@ -17,7 +17,7 @@ void wait() {
 }
 
 // traverses a linked list of fields
-Field* field_traverser(Line* line, int start, int distance) {
+Field* traverse_line(Line* line, int start, int distance) {
 
   Field* current_position = line->first_field;
 
@@ -32,7 +32,7 @@ Field* field_traverser(Line* line, int start, int distance) {
       distance++;
     }
   }
-  return current_position; 
+  return current_position;
 }
 
 // binary search for a column's header
@@ -40,16 +40,15 @@ string search_header(Line* headers, int target, int first, int last) {
 
   int pivot = (first + last) / 2;
   int distance = target - pivot;
-  Field* traversed_field = field_traverser(headers, pivot, distance);
+  Field* traversed_field = traverse_line(headers, pivot, distance);
   string target_header = traversed_field->content;
 
   if (target > pivot) {
     search_header(headers, target, pivot + 1, last);
   } else if (target < pivot) {
     search_header(headers, target, first, pivot - 1);
-  } else {
-    return target_header;
   }
+  return target_header;
 }
 
 // search for a header by its column
@@ -74,3 +73,14 @@ int count_headers(string content) {
 
   return count;
 };
+
+// search for a column by its header
+int get_column(string header, Line* headers) {
+  Field* start = traverse_line(headers, 1, 1);
+
+  while (header != start->content) {
+    start = start->next;
+  }
+  return start->column;
+};
+

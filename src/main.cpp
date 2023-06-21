@@ -1,5 +1,6 @@
 #include <fstream>
 #include "file.h"
+#include "header.h"
 
 using namespace std;
 
@@ -24,8 +25,10 @@ int main () {
   outfile << "File I/O OK\n";
   outfile.close();
 
-  // print file contents
-  // file.print("");
+  // print mapped contents
+  file.print("");
+
+  cout << "Chuva 22 is at column" << get_column("Chuva22", file.headers) << endl;
 
   return 0;
 }

@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include "file.h"
+#include "field.h"
 
 using namespace std;
 
@@ -14,5 +15,7 @@ struct Field {
   Field* next = nullptr;
   Field* previous = nullptr;
 };
+
+Field* field_gap_scan(Line*);
 
 #endif

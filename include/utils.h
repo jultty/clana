@@ -2,7 +2,6 @@
 #define CLANA_UTILS_H
 #include <string>
 #include <iostream>
-#include <string>
 
 using namespace std;
 

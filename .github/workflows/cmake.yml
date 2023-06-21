@@ -24,7 +24,7 @@ jobs:
 
     - name: Copy mock data
       working-directory: ${{github.workspace}}/build
-      run: cp ../data/fake.csv/ .
+      run: cp ../data/fake.csv .
 
     - name: Run 
       working-directory: ${{github.workspace}}/build

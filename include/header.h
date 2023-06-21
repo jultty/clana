@@ -1,5 +1,5 @@
-#ifndef CLANA_UTILS_H
-#define CLANA_UTILS_H
+#ifndef CLANA_HEADER_H
+#define CLANA_HEADER_H
 #include <string>
 #include <iostream>
 

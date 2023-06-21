@@ -4,7 +4,7 @@
   - 1.1. [OK] read CSV
   - 1.2. [OK] structure data in lines
   - 1.3. [OK] structure data in columns
-  - 1.4. search for a header by its column
+  - 1.4. [OK] search for a header by its column
   - 1.5. search for a column by its header
 - 2. data cleaning
   - 2.1. [OK] optionally hide headers
@@ -23,5 +23,3 @@
 - 7. UI
   - 7.1. add a menu
   - 7.2. add job queuing
-- 8. garbage collection
-  - 8.1 cleanup instantiated objects on exit

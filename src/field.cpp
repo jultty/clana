@@ -1,6 +1,6 @@
 #include <iostream>
-#include "file.h"
-#include "field.h"
+#include "file.hpp"
+#include "field.hpp"
 
 // finds gaps in lines
 // returns the first field if none found
@@ -19,3 +19,4 @@ Field* field_gap_scan(Line* line) {
   // no gap found
   return line->first_field;
 };
+

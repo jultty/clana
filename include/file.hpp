@@ -1,8 +1,8 @@
 #ifndef CLANA_FILE_H
 #define CLANA_FILE_H
 #include <string>
-#include "line.h"
-#include "field.h"
+#include "line.hpp"
+#include "field.hpp"
 
 using namespace std;
 using File = struct File;

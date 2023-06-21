@@ -1,6 +1,6 @@
 #include <fstream>
-#include "file.h"
-#include "header.h"
+#include "file.hpp"
+#include "header.hpp"
 
 using namespace std;
 

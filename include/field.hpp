@@ -14,6 +14,8 @@ struct Field {
   Header* header = nullptr;
   Field* next = nullptr;
   Field* previous = nullptr;
+  Field* above = nullptr;
+  Field* below = nullptr;
 };
 
 Field* field_gap_scan(Line*);

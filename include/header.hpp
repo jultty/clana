@@ -13,6 +13,8 @@ struct Header {
   Field* field = nullptr;
   Header* next = nullptr;
   Header* previous = nullptr;
+  Field* first_field = nullptr;
+  Field* last_field = nullptr;
   double total = 0;
   double average = -1;
 };

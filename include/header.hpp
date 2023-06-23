@@ -10,18 +10,18 @@ using Field = struct Field;
 
 struct Header {
   int column = -1;
-  string content = "";
-  int total = -1;
-  float average = -1;
-  Line* line = nullptr;
-  Field* next = nullptr;
-  Field* previous = nullptr;
+  Field* field = nullptr;
+  Header* next = nullptr;
+  Header* previous = nullptr;
+  double total = 0;
+  double average = -1;
 };
 
 bool detect_headers(string);
-string get_header(int, Line*);
+Header* get_header(int, Line*);
+Header* traverse_headers(Line*, int, int);
 int get_column(string, Line*);
 int count_headers(string);
-void wait();
+double parse_double(string);
 
 #endif

@@ -41,19 +41,19 @@ int main () {
   Line* gap_line = line_gap_scan(mock_line);
   Field* gap_field = field_gap_scan(gap_line);
 
-  if (gap_field  -1) {
-    cout << "Line gap scan started at " << mock_line->row;
+    cout << "Line gap scan started at row " << mock_line->row;
     cout << ", first gap found on line " << gap_line->row;
     cout << ", column " << gap_field->column << " (";
     cout << gap_field->header->field->content << ")" << endl;
-  }
 
   cout << "Chuva 22 is at column";
   cout << get_column("Chuva22", file.headers) << endl;
 
   Header* total_example = traverse_headers(file.headers, 1, 7);
-  cout << "Total for variable at column " << total_example->column;
-  cout << " (" << total_example->field->content << "): ";
-  cout << total_example->total << endl;
+  cout << "Column " << total_example->column << " (";
+  cout << total_example->field->content << "): total ";
+  cout << total_example->total << " and average ";
+  cout << total_example->average << endl;
+
   return 0;
 }

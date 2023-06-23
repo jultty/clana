@@ -62,9 +62,12 @@ void File::add(string content) {
         // set header name
         new_field->header = get_header(new_field->column, headers);
 
-        // add observation to header total if it's numeric 
+        // calculate header total and average
         new_field->header->total = new_field->header->total 
           + parse_double(observation);
+        int observation_rows = (last->row - headers->row) +  1;
+        new_field->header->average =
+          new_field->header->total / observation_rows;
       }
 
       field_counter++;

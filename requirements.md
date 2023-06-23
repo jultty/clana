@@ -15,6 +15,7 @@
   - 4.1. [OK] detect lines with missing data
   - 4.2. [OK] detect line columns with missing data
 - 5. averages
+    5.1  [OK] obtain sum
   - 5.1. obtain average for column
   - 5.2. insert average on gaps
 - 6. linear regression 

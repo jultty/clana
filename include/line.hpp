@@ -1,9 +1,9 @@
 #ifndef CLANA_LINE_H
 #define CLANA_LINE_H
-#include "file.h"
+#include "file.hpp"
+#include "header.hpp"
 
 using namespace std;
-using Field = struct Field;
 
 struct Line {
   int row = -1;

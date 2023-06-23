@@ -15,12 +15,15 @@
   - 4.1. [OK] detect lines with missing data
   - 4.2. [OK] detect line columns with missing data
 - 5. averages
-  - 5.1. obtain average for column
+    5.1  [OK] obtain sum
+  - 5.1. [OK] obtain average for column
   - 5.2. insert average on gaps
 - 6. linear regression 
   - 6.1. obtain linear regression
   - 6.2. calculate predicted value for given x
   - 6.3. insert predicted y on corresponding gaps
+- 7. output
+  - 7.1 write csv with inserted values
 - 7. translate README
   - 7.1. create separate READMEs for each language
 - 8. UI

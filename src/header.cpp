@@ -1,5 +1,6 @@
 #include "file.hpp"
 #include "header.hpp"
+#include <cmath>
 
 using namespace std;
 
@@ -96,4 +97,59 @@ double parse_double(string observation) {
   }
   double parsed_double = stod(parsed_observation);
   return parsed_double;
+};
+
+double sqr(double x) {
+  return x * x;
+};
+
+// arguments: header for the column and number of lines
+double sqrd_sum(Header* header, int n) {
+
+  double total = 0;
+  Field* current = header->first_field;
+
+  for (int i = 1; i <= n; i++) {
+    total += sqr(parse_double(current->content));
+    if (current->below != nullptr) {
+      current = current->below;
+    } else {
+      break;
+    }
+  }
+
+  return total;
+};
+
+double multiplied_sum(Header* x, Header* y, int n) {
+  double total = 0;
+  Field* current_x = x->first_field;
+  Field* current_y = y->first_field;
+
+  for (int i = 1; i <= n; i++) {
+    total += parse_double(current_x->content) * parse_double(current_y->content);
+    if (current_x->below != nullptr && current_y->below != nullptr) {
+      current_x = current_x->below;
+      current_y = current_y->below;
+    } else {
+      break;
+    }
+  }
+
+  return total;
+}
+
+double get_correlation(Header*x, Header* y, int n) {
+  double x_sum = x->total;
+  double x_sqrd_sum = sqrd_sum(x, n);
+  double y_sum = y->total;
+  double y_sqrd_sum = sqrd_sum(y, n);
+  double xy_sum = multiplied_sum(x, y, n);
+
+  double numerator = (n * xy_sum) - (x_sum * y_sum);
+  double x_root = sqrt((n * x_sqrd_sum) - sqr(x_sum));
+  double y_root = sqrt((n * y_sqrd_sum) - sqr(y_sum));
+  double denominator = x_root * y_root;
+
+  return numerator / denominator;
 };

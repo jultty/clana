@@ -1,4 +1,5 @@
 #include <fstream>
+#include <iomanip>
 #include "file.hpp"
 #include "header.hpp"
 
@@ -26,6 +27,9 @@ int main () {
     mock_file.add(line_content);
   mock_infile.close();
 
+  // set number notation and precision
+  cout << fixed << setprecision(4);
+
   //print mapped contents
   /* file.print(""); */
   /* mock_file.print(""); */
@@ -49,11 +53,18 @@ int main () {
   cout << "Chuva 22 is at column";
   cout << get_column("Chuva22", file.headers) << endl;
 
-  Header* total_example = traverse_headers(file.headers, 1, 7);
-  cout << "Column " << total_example->column << " (";
-  cout << total_example->field->content << "): total ";
-  cout << total_example->total << " and average ";
-  cout << total_example->average << endl;
+  Header* Maxima = traverse_headers(file.headers, 1, 4);
+  double n = file.last->row - file.headers->row - 1;
+  double sum_of_squared_values = sqrd_sum(Maxima, n);
+   
+  Header* Total = traverse_headers(file.headers, 1, 5);
+  sum_of_squared_values = sqrd_sum(Total, n);
+  double correlation = get_correlation(Maxima, Total, n);
+
+  cout << "Column " << Maxima->column << " (";
+  cout << Maxima->field->content << ") and column ";
+  cout << Total->column << " (" << Total->field->content;
+  cout << ") have a correlation coefficient of " << correlation << endl;
 
   return 0;
 }

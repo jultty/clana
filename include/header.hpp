@@ -25,5 +25,7 @@ Header* traverse_headers(Line*, int, int);
 int get_column(string, Line*);
 int count_headers(string);
 double parse_double(string);
+double sqrd_sum(Header*, int);
+double get_correlation(Header*, Header*, int);
 
 #endif

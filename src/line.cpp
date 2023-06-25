@@ -2,31 +2,21 @@
 #include "line.hpp"
 #include "field.hpp"
 
-// checks if line has gaps
-// if not, moves to the next line
-// returns the first found line's row number
-Line* line_gap_scan(Line* start) {
+// finds gaps in lines, returns first match
+Field* line_gap_scan(Line* line) {
 
-  Line* line = start;
+  Field* field = line->first_field;
+  int limit = line->last_field->column;
 
-  while (!line->is_last) {
-    Field* gap = field_gap_scan(line);
-
-    if (gap->column != line->first_field->column)
-      return line;
-
-    line = line->next;  
+  while (field->column < limit) {
+    if (field->content == "")  {
+      return field;
+    } else {
+      field = field->next;
+    }
   }
-
-  if (line->is_last) {
-    Field* gap = field_gap_scan(line);
-
-    if (gap->column != line->first_field->column)
-      return line;
-  }
-
   // no gap found
-  return NULL;
+  return nullptr;
 };
 
 // traverses a linked list of fields

@@ -23,21 +23,69 @@ Field* traverse_fields(Line* line, int start, int distance) {
   return current_position;
 }
 
-// finds gaps in lines
-// returns the first field if none found
-Field* field_gap_scan(Line* line) {
+// finds a field by its column and row 
+Field* get_field(Line* start, int row, int column) {
 
-  Field* field = line->first_field;
-  int limit = line->last_field->column;
+  Field* current = start->first_field;
 
-  while (field->column < limit) {
-    if (field->content == "")  {
-      return field;
+  while (current != nullptr) {
+    if (current->column == column && current->line->row == row) {
+      return current;
     } else {
-      field = field->next;
+      if (current->next != nullptr) {
+        current = current->next;
+      } else {
+        if (current->line->next != nullptr) {
+          current = current->line->next->first_field;
+        }
+      }
     }
   }
-  // no gap found
-  return line->first_field;
-};
+  return current;
+}
+
+// finds gaps between two lines, returns first match
+Field* range_gap_scan(Line* start, Line* end) {
+
+  Line* line = start;
+  Field* gap = nullptr;
+
+  // iterate over line range
+  while (line != end->next) {
+    // find the first gap in the line
+    gap = line_gap_scan(line);
+
+    // if a gap is found
+    if (gap != nullptr) {
+
+      // iterate over all line columns 
+      while (gap->column <= line->last_field->column) {
+        // check if column is all gaps
+        Field* column_scan = column_gap_scan(gap->header, start, end);
+
+        // column is not all gaps and has at least one gap
+        if (column_scan != gap->header->field && column_scan != nullptr) {
+          // found gap is within range
+          if (column_scan->line->row >= start->row && column_scan->line->row <= end->row) {
+            return column_scan;
+          } 
+        } 
+
+          // if there are still fields to scan
+          if (gap->next != nullptr) {
+            gap = gap->next;
+          }
+          else {
+            break;
+          }
+        }
+      }
+      // move to next line
+      if (line->next != nullptr) {
+        line = line->next;
+      }
+    }
+
+    return gap;
+  };
 

@@ -9,50 +9,26 @@ int main () {
 
   // set up I/O stream
   ifstream infile;
-  ifstream mock_infile;
   ofstream outfile;
   infile.open("in.csv");
-  mock_infile.open("mock.csv");
 
   // populate data structures with file contents
   File file;
-  File mock_file;
   string line_content;
 
   while (getline (infile, line_content))
     file.add(line_content);
   infile.close();
 
-  while (getline (mock_infile, line_content))
-    mock_file.add(line_content);
-  mock_infile.close();
-
   // set number notation and precision
   cout << fixed << setprecision(4);
 
   // print mapped contents (prints all lines)
   /* file.print("all"); */
-  /* mock_file.print("all"); */
-
-  // find the first field with a gap
-  Field* empty = field_gap_scan(file.last);
-  cout << "Found empty field: " << empty->header->field->content;
-  cout << " at row " << file.last->row;
-  cout << " column " << empty->column << endl;
-
-  // find the first line with a gap
-  Line* mock_line = traverse_lines(mock_file.first, 45);
-  Line* gap_line = line_gap_scan(mock_line);
-  Field* gap_field = field_gap_scan(gap_line);
-
-  cout << "Line gap scan started at row " << mock_line->row;
-  cout << ", first gap found on line " << gap_line->row;
-  cout << ", column " << gap_field->column << " (";
-  cout << gap_field->header->field->content << ")" << endl;
 
   // search columns by content
-  cout << "Chuva 22 is at column";
-  cout << get_column("Chuva22", file.headers) << endl;
+  cout << "Maxima is at column " << get_column("Maxima", file.headers);
+  cout << " and Total at " << get_column("Total", file.headers) << endl;
 
   // get the correlation coefficient
   Header* Maxima = traverse_headers(file.headers, 1, 4);
@@ -61,9 +37,9 @@ int main () {
   double correlation = get_correlation(Maxima, Total, n);
 
   cout << "Column " << Maxima->column << " (";
-  cout << Maxima->field->content << ") and column ";
+  cout << Maxima->field->content << ") and ";
   cout << Total->column << " (" << Total->field->content;
-  cout << ") have a correlation coefficient of " << correlation << endl;
+  cout << ") have a correlation of " << correlation << endl;
 
   // build a regression model
   tuple<double, double> model  = regression(Maxima, Total, n);
@@ -77,6 +53,71 @@ int main () {
   // predict a value
   cout << "ŷ for x = 51.9 is " << predict(51.9, model) << endl;
   cout << "ŷ for x = 140.2 is " << predict(140.2, model) << endl;
+
+  // find the first gap
+  Line* range_start = traverse_lines(file.first, 44);
+  Line* range_end = traverse_lines(file.first, 85);
+  Field* gap = range_gap_scan(range_start, range_end);
+
+  cout << "Gap scan from row " << range_start->row;
+  cout << " found a gap on row " << gap->line->row << ", column ";
+  cout << gap->column << " (" << gap->header->field->content << ")\n";
+
+  // solve gaps with column average
+  range_average_solver(gap->header, file.last_header);
+
+  // re-scan
+  Field* average_solved_gap = range_gap_scan(range_start, range_end);
+  cout << "After average solving, scan found the first gap on row "; 
+  cout << average_solved_gap->line->row << ", column ";
+  cout << average_solved_gap->column << endl;
+
+  Field* solved_gap = get_field(file.headers, 72, 42);
+  cout << "Previous first gap now has value " << solved_gap->content;
+  cout << " while its header has average ";
+  cout << solved_gap->header->average << endl;
+
+  Field* Maxima_gap = column_gap_scan(Maxima, file.headers, file.last);
+  Field* Total_gap = column_gap_scan(Total, file.headers, file.last);
+
+  cout << "Scan on column " << Maxima->field->content;
+  cout << " found a gap on row " << Maxima_gap->line->row << endl;
+
+  cout << "Scan on column " << Total->field->content;
+  cout << " found a gap on row " << Total_gap->line->row << endl;
+
+  cout << "Solving gap on " << Maxima->field->content << " with the average solver\n";
+
+  range_average_solver(Maxima, file.last_header);
+
+  cout << "Scanning again...\n";
+  Maxima_gap = column_gap_scan(Maxima, file.headers, file.last);
+  if (Maxima_gap == nullptr) {
+    cout << "No gap found on column\n";
+  } else {
+    cout << "Scan on column " << Maxima->field->content;
+    cout << " found a gap on row " << Maxima_gap->line->row << endl;
+  }
+
+  cout << "Solving gap on " << Total->field->content << " with the regression solver\n";
+  range_regression_solver(Total, Total, model);
+
+  cout << "Scanning again...\n";
+  Total_gap = column_gap_scan(Total, file.headers, file.last);
+
+  Total_gap = column_gap_scan(Total, file.headers, file.last);
+  if (Total_gap == nullptr) {
+    cout << "No gap found on column\n";
+  } else {
+    cout << "Scan on column " << Total->field->content;
+    cout << " found a gap on row " << Total_gap->line->row << endl;
+  }
+
+  Field* solved_Total_gap = get_field(file.headers, 109, 6);
+  cout << "Gap on column " << solved_Total_gap->header->field->content;
+  cout << " now has value " << solved_Total_gap->content;
+
+  cout << endl;
 
   return 0;
 }

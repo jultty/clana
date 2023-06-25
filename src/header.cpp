@@ -80,6 +80,124 @@ int get_column(string header, Line* headers) {
   return start->column;
 };
 
+// finds gaps in columns, returns first match
+// returns the header field if all fields are gaps
+Field* column_gap_scan(Header* header, Line* start, Line* end) {
+
+  Field* current = header->first_field;
+
+  Field* first_match = nullptr;
+  bool has_values = false;
+
+  // check all fields for gaps
+  while (current != nullptr) {
+    int field_row = current->line->row;
+
+    // if field is a gap, first match and within range
+    if (current->content == "") {
+      if (first_match == nullptr && 
+          field_row >= start->row && field_row <= end->row) {
+        first_match = current;
+      } 
+      // field is not a gap
+    } else {
+      has_values = true;
+    }
+
+    // if there is a field below, move to it
+    if (current->below != nullptr) {
+      current = current->below;
+      // if there is no field below, exit loop
+    } else {
+      break;
+    }
+  }
+
+  // column is not all gaps and there is a gap within range 
+  if (has_values) {
+    if (first_match != nullptr) {
+      return first_match;
+    }
+  // column is all gaps
+  } else {
+    return header->field;
+  }
+  // column has no gaps
+  return first_match;
+}
+
+void gap_average_solver(Header* header, Line* start, Line* end) {
+
+  Field* current = header->first_field;
+
+  // check whole column for gaps
+  while (current != nullptr) {
+    int field_row = current->line->row;
+
+    // if field is a gap and within range, set content to the column average
+    if (current->content == "") {
+      if (field_row >= start->row && field_row <= end->row) {
+        current->content = to_string(current->header->average);
+      }
+    }
+
+    // move to field below if it exists
+    if (current->below != nullptr)
+      current = current->below;
+    else
+      break;
+  }
+}
+
+void gap_regression_solver(Header* header, Line* start, Line* end, tuple<double, double> model) {
+
+  Field* current = header->first_field;
+
+  // check whole column for gaps
+  while (current != nullptr) {
+    int field_row = current->line->row;
+
+    // if field is a gap and within range, set content to a predicted value
+    if (current->content == "") {
+      if (field_row >= start->row && field_row <= end->row) {
+        double predicted_value =
+          predict(current->header->average, model);
+        current->content = to_string(predicted_value);
+      }
+    }
+
+    // move to field below if it exists
+    if (current->below != nullptr)
+      current = current->below;
+    else
+      break;
+  }
+}
+
+void range_average_solver(Header* start, Header* end) {
+  Header* current = start;
+
+  while (current != nullptr) {
+
+    gap_average_solver(current, current->first_field->line,
+        current->last_field->line);
+
+    current = current->next;
+  }
+}
+
+void range_regression_solver(Header* start, Header* end, tuple<double, double> model) {
+  Header* current = start;
+
+  while (current != nullptr) {
+
+    gap_regression_solver(current, current->first_field->line,
+        current->last_field->line, model);
+
+    current = current->next;
+  }
+}
+
 double parse_double(string observation) {
   string parsed_observation = "";
   for (char character : observation) {

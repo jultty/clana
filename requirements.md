@@ -17,7 +17,7 @@
 - 5. averages
     5.1. [OK] obtain sum
   - 5.1. [OK] obtain average for column
-  - 5.2. insert average on gaps
+  - 5.2. [OK] insert average on gaps
 - 6. linear regression 
   - 6.1. [OK] obtain correlation coefficient
   - 6.2. [OK] obtain linear regression

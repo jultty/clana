@@ -1,7 +1,8 @@
 #ifndef CLANA_HEADER_H
 #define CLANA_HEADER_H
-#include <string>
 #include <iostream>
+#include <string>
+#include <tuple>
 
 using namespace std;
 using Header = struct Header;
@@ -27,5 +28,8 @@ int count_headers(string);
 double parse_double(string);
 double sqrd_sum(Header*, int);
 double get_correlation(Header*, Header*, int);
+tuple<double, double> regression(Header*, Header*, int);
+double predict(double, tuple<double, double>);
+
 
 #endif

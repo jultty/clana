@@ -1,6 +1,7 @@
 #include "file.hpp"
 #include "header.hpp"
 #include <cmath>
+#include <tuple>
 
 using namespace std;
 
@@ -153,3 +154,24 @@ double get_correlation(Header*x, Header* y, int n) {
 
   return numerator / denominator;
 };
+
+tuple<double, double> regression(Header* x, Header* y, int n) {
+  double x_sum = x->total;
+  double x_sqrd_sum = sqrd_sum(x, n);
+  double y_sum = y->total;
+  double xy_sum = multiplied_sum(x, y, n);
+
+  double numerator = (n * xy_sum) - (x_sum * y_sum);
+  double denominator = (n * x_sqrd_sum) - sqr(x_sum);
+
+  double m = numerator / denominator;
+  double b = y->average - (m * x->average);
+
+  return make_tuple(m, b);
+}
+
+double predict(double x, tuple<double, double> model) {
+  double m = get<0>(model);
+  double b = get<1>(model);
+  return (m * x) + b;
+}

@@ -19,9 +19,9 @@
   - 5.1. [OK] obtain average for column
   - 5.2. insert average on gaps
 - 6. linear regression 
-  - 6.1. obtain correlation coefficient
-  - 6.2. obtain linear regression
-  - 6.3. calculate predicted value for given x
+  - 6.1. [OK] obtain correlation coefficient
+  - 6.2. [OK] obtain linear regression
+  - 6.3. [OK] calculate predicted value for given x
   - 6.4. insert predicted y on gaps
 - 7. output
   - 7.1 write csv with inserted values

@@ -75,7 +75,7 @@ void File::add(string content) {
         // calculate header total and average
         new_field->header->total = new_field->header->total 
           + parse_double(observation);
-        int observation_rows = (last->row - headers->row) +  1;
+        int observation_rows = (last->row - headers->row);
         new_field->header->average =
           new_field->header->total / observation_rows;
       }

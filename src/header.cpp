@@ -80,6 +80,52 @@ int get_column(string header, Line* headers) {
   return start->column;
 };
 
+// finds gaps in columns, returns first matchover 
+// returns the header field if all fields are gaps
+Field* column_gap_scan(Header* header, Line* start, Line* end) {
+
+  Field* current = header->first_field;
+
+  Field* first_match = nullptr;
+  bool has_values = false;
+
+  // check all fields for gaps
+  while (current != nullptr) {
+    int field_row = current->line->row;
+
+    // if field is a gap, first match and within range
+    if (current->content == "") {
+      if (first_match == nullptr && 
+          field_row >= start->row && field_row <= end->row) {
+        first_match = current;
+      } 
+      // field is not a gap
+    } else {
+      has_values = true;
+    }
+
+    // if there is a field below, move to it
+    if (current->below != nullptr) {
+      current = current->below;
+      // if there is no field below, exit loop
+    } else {
+      break;
+    }
+  }
+
+  // column is not all gaps and there is a gap within range 
+  if (has_values) {
+    if (first_match != nullptr) {
+      return first_match;
+    }
+  // column is all gaps
+  } else {
+    return header->field;
+  }
+  // column has no gaps
+  return first_match;
+}
+
 double parse_double(string observation) {
   string parsed_observation = "";
   for (char character : observation) {

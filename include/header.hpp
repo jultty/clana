@@ -24,6 +24,7 @@ bool detect_headers(string);
 Header* get_header(int, Line*);
 Header* traverse_headers(Line*, int, int);
 int get_column(string, Line*);
+Field* column_gap_scan(Header*, Line*, Line*);
 int count_headers(string);
 double parse_double(string);
 double sqrd_sum(Header*, int);

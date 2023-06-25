@@ -18,7 +18,7 @@ struct Field {
   Field* below = nullptr;
 };
 
-Field* field_gap_scan(Line*);
+Field* line_gap_scan(Line*);
 Field* traverse_fields(Line*, int, int);
 
 #endif

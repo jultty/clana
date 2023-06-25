@@ -16,7 +16,7 @@ struct Line {
   Field* last_field = nullptr;
 };
 
-Line* line_gap_scan(Line*);
+Line* range_gap_scan(Line*,  Line*);
 Line* traverse_lines(Line*, int);
 
 #endif

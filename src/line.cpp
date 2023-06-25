@@ -5,12 +5,12 @@
 // checks if line has gaps
 // if not, moves to the next line
 // returns the first found line's row number
-Line* line_gap_scan(Line* start) {
+Line* range_gap_scan(Line* start, Line* end) {
 
   Line* line = start;
 
-  while (!line->is_last) {
-    Field* gap = field_gap_scan(line);
+  while (line != end) {
+    Field* gap = line_gap_scan(line);
 
     if (gap->column != line->first_field->column)
       return line;
@@ -18,8 +18,8 @@ Line* line_gap_scan(Line* start) {
     line = line->next;  
   }
 
-  if (line->is_last) {
-    Field* gap = field_gap_scan(line);
+  if (line == end) {
+    Field* gap = line_gap_scan(line);
 
     if (gap->column != line->first_field->column)
       return line;

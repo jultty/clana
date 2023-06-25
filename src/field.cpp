@@ -25,7 +25,7 @@ Field* traverse_fields(Line* line, int start, int distance) {
 
 // finds gaps in lines
 // returns the first field if none found
-Field* field_gap_scan(Line* line) {
+Field* line_gap_scan(Line* line) {
 
   Field* field = line->first_field;
   int limit = line->last_field->column;

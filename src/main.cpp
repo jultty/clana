@@ -35,17 +35,18 @@ int main () {
   /* mock_file.print("all"); */
 
   // find the first field with a gap
-  Field* empty = field_gap_scan(file.last);
+  Field* empty = line_gap_scan(file.last);
   cout << "Found empty field: " << empty->header->field->content;
   cout << " at row " << file.last->row;
   cout << " column " << empty->column << endl;
 
   // find the first line with a gap
-  Line* mock_line = traverse_lines(mock_file.first, 45);
-  Line* gap_line = line_gap_scan(mock_line);
-  Field* gap_field = field_gap_scan(gap_line);
+  Line* mock_range_start = traverse_lines(mock_file.first, 45);
+  Line* mock_range_end = traverse_lines(mock_file.first, 85);
+  Line* gap_line = range_gap_scan(mock_range_start, mock_range_end);
+  Field* gap_field = line_gap_scan(gap_line);
 
-  cout << "Line gap scan started at row " << mock_line->row;
+  cout << "Line gap scan started at row " << mock_range_start->row;
   cout << ", first gap found on line " << gap_line->row;
   cout << ", column " << gap_field->column << " (";
   cout << gap_field->header->field->content << ")" << endl;

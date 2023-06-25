@@ -27,6 +27,8 @@ int get_column(string, Line*);
 Field* column_gap_scan(Header*, Line*, Line*);
 void gap_average_solver(Header*, Line*, Line*);
 void range_average_solver(Header*, Header*);
+void gap_regression_solver(Header*, Line*, Line*, tuple<double, double>);
+void range_regression_solver(Header*, Header*, tuple<double, double>);
 int count_headers(string);
 double parse_double(string);
 double sqrd_sum(Header*, int);

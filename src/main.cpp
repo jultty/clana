@@ -72,9 +72,50 @@ int main () {
   cout << average_solved_gap->line->row << ", column ";
   cout << average_solved_gap->column << endl;
 
-  Field* previous_gap = get_field(file.headers, 72, 42);
-  cout << "Previous first gap now has value " << previous_gap->content;
-  cout << " while its header has average " << previous_gap->header->average;
+  Field* solved_gap = get_field(file.headers, 72, 42);
+  cout << "Previous first gap now has value " << solved_gap->content;
+  cout << " while its header has average ";
+  cout << solved_gap->header->average << endl;
+
+  Field* Maxima_gap = column_gap_scan(Maxima, file.headers, file.last);
+  Field* Total_gap = column_gap_scan(Total, file.headers, file.last);
+
+  cout << "Scan on column " << Maxima->field->content;
+  cout << " found a gap on row " << Maxima_gap->line->row << endl;
+
+  cout << "Scan on column " << Total->field->content;
+  cout << " found a gap on row " << Total_gap->line->row << endl;
+
+  cout << "Solving gap on " << Maxima->field->content << " with the average solver\n";
+
+  range_average_solver(Maxima, file.last_header);
+
+  cout << "Scanning again...\n";
+  Maxima_gap = column_gap_scan(Maxima, file.headers, file.last);
+  if (Maxima_gap == nullptr) {
+    cout << "No gap found on column\n";
+  } else {
+    cout << "Scan on column " << Maxima->field->content;
+    cout << " found a gap on row " << Maxima_gap->line->row << endl;
+  }
+
+  cout << "Solving gap on " << Total->field->content << " with the regression solver\n";
+  range_regression_solver(Total, Total, model);
+
+  cout << "Scanning again...\n";
+  Total_gap = column_gap_scan(Total, file.headers, file.last);
+
+  Total_gap = column_gap_scan(Total, file.headers, file.last);
+  if (Total_gap == nullptr) {
+    cout << "No gap found on column\n";
+  } else {
+    cout << "Scan on column " << Total->field->content;
+    cout << " found a gap on row " << Total_gap->line->row << endl;
+  }
+
+  Field* solved_Total_gap = get_field(file.headers, 109, 6);
+  cout << "Gap on column " << solved_Total_gap->header->field->content;
+  cout << " now has value " << solved_Total_gap->content;
 
   cout << endl;
 

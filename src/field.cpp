@@ -80,7 +80,6 @@ Field* range_gap_scan(Line* start, Line* end) {
           }
         }
       }
-
       // move to next line
       if (line->next != nullptr) {
         line = line->next;

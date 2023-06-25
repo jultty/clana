@@ -22,11 +22,10 @@
   - 6.1. [OK] obtain correlation coefficient
   - 6.2. [OK] obtain linear regression
   - 6.3. [OK] calculate predicted value for given x
-  - 6.4. insert predicted y on gaps
+  - 6.4. [OK] insert predicted y on gaps
 - 7. output
   - 7.1 write csv with inserted values
 - 8. translate README
   - 8.1. create separate READMEs for each language
 - 9. UI
   - 9.1. add a menu
-  - 9.2. add job queuing

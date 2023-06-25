@@ -126,6 +126,41 @@ Field* column_gap_scan(Header* header, Line* start, Line* end) {
   return first_match;
 }
 
+void gap_average_solver(Header* header, Line* start, Line* end) {
+
+  Field* current = header->first_field;
+
+  // check whole column for gaps
+  while (current != nullptr) {
+    int field_row = current->line->row;
+
+    // if field is a gap and within range, set content to the column average
+    if (current->content == "") {
+      if (field_row >= start->row && field_row <= end->row) {
+        current->content = to_string(current->header->average);
+      }
+    }
+
+    // move to field below if it exists
+    if (current->below != nullptr)
+      current = current->below;
+    else
+      break;
+  }
+}
+
+void range_average_solver(Header* start, Header* end) {
+  Header* current = start;
+
+  while (current != nullptr) {
+
+    gap_average_solver(current, current->first_field->line,
+        current->last_field->line);
+
+    current = current->next;
+  }
+}
+
 double parse_double(string observation) {
   string parsed_observation = "";
   for (char character : observation) {

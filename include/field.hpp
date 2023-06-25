@@ -19,6 +19,7 @@ struct Field {
 };
 
 Field* traverse_fields(Line*, int, int);
+Field* get_field(Line*, int, int);
 Field* range_gap_scan(Line*,  Line*);
 
 #endif

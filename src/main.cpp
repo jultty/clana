@@ -56,12 +56,25 @@ int main () {
 
   // find the first gap
   Line* range_start = traverse_lines(file.first, 44);
-  Line* range_end = traverse_lines(file.first, 84);
+  Line* range_end = traverse_lines(file.first, 85);
   Field* gap = range_gap_scan(range_start, range_end);
 
   cout << "Gap scan from row " << range_start->row;
-  cout << " found a gap on row " << gap->line->row << ", column " << gap->column;
-  cout << " (" << gap->header->field->content << ")" << endl;
+  cout << " found a gap on row " << gap->line->row << ", column ";
+  cout << gap->column << " (" << gap->header->field->content << ")\n";
+
+  // solve gaps with column average
+  range_average_solver(gap->header, file.last_header);
+
+  // re-scan
+  Field* average_solved_gap = range_gap_scan(range_start, range_end);
+  cout << "After average solving, scan found the first gap on row "; 
+  cout << average_solved_gap->line->row << ", column ";
+  cout << average_solved_gap->column << endl;
+
+  Field* previous_gap = get_field(file.headers, 72, 42);
+  cout << "Previous first gap now has value " << previous_gap->content;
+  cout << " while its header has average " << previous_gap->header->average;
 
   cout << endl;
 

@@ -25,6 +25,8 @@ Header* get_header(int, Line*);
 Header* traverse_headers(Line*, int, int);
 int get_column(string, Line*);
 Field* column_gap_scan(Header*, Line*, Line*);
+void gap_average_solver(Header*, Line*, Line*);
+void range_average_solver(Header*, Header*);
 int count_headers(string);
 double parse_double(string);
 double sqrd_sum(Header*, int);

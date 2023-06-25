@@ -23,6 +23,27 @@ Field* traverse_fields(Line* line, int start, int distance) {
   return current_position;
 }
 
+// finds a field by its column and row 
+Field* get_field(Line* start, int row, int column) {
+
+  Field* current = start->first_field;
+
+  while (current != nullptr) {
+    if (current->column == column && current->line->row == row) {
+      return current;
+    } else {
+      if (current->next != nullptr) {
+        current = current->next;
+      } else {
+        if (current->line->next != nullptr) {
+          current = current->line->next->first_field;
+        }
+      }
+    }
+  }
+  return current;
+}
+
 // finds gaps between two lines, returns first match
 Field* range_gap_scan(Line* start, Line* end) {
 

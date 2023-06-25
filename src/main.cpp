@@ -1,4 +1,5 @@
 #include <fstream>
+#include <iomanip>
 #include "file.hpp"
 #include "header.hpp"
 
@@ -13,7 +14,7 @@ int main () {
   infile.open("in.csv");
   mock_infile.open("mock.csv");
 
-  // iterate over each input line
+  // populate data structures with file contents
   File file;
   File mock_file;
   string line_content;
@@ -26,9 +27,12 @@ int main () {
     mock_file.add(line_content);
   mock_infile.close();
 
-  //print mapped contents
-  /* file.print(""); */
-  /* mock_file.print(""); */
+  // set number notation and precision
+  cout << fixed << setprecision(4);
+
+  // print mapped contents (prints all lines)
+  /* file.print("all"); */
+  /* mock_file.print("all"); */
 
   // find the first field with a gap
   Field* empty = field_gap_scan(file.last);
@@ -41,19 +45,38 @@ int main () {
   Line* gap_line = line_gap_scan(mock_line);
   Field* gap_field = field_gap_scan(gap_line);
 
-    cout << "Line gap scan started at row " << mock_line->row;
-    cout << ", first gap found on line " << gap_line->row;
-    cout << ", column " << gap_field->column << " (";
-    cout << gap_field->header->field->content << ")" << endl;
+  cout << "Line gap scan started at row " << mock_line->row;
+  cout << ", first gap found on line " << gap_line->row;
+  cout << ", column " << gap_field->column << " (";
+  cout << gap_field->header->field->content << ")" << endl;
 
+  // search columns by content
   cout << "Chuva 22 is at column";
   cout << get_column("Chuva22", file.headers) << endl;
 
-  Header* total_example = traverse_headers(file.headers, 1, 7);
-  cout << "Column " << total_example->column << " (";
-  cout << total_example->field->content << "): total ";
-  cout << total_example->total << " and average ";
-  cout << total_example->average << endl;
+  // get the correlation coefficient
+  Header* Maxima = traverse_headers(file.headers, 1, 4);
+  Header* Total = traverse_headers(file.headers, 1, 5);
+  double n = file.last->row - file.headers->row - 1;
+  double correlation = get_correlation(Maxima, Total, n);
+
+  cout << "Column " << Maxima->column << " (";
+  cout << Maxima->field->content << ") and column ";
+  cout << Total->column << " (" << Total->field->content;
+  cout << ") have a correlation coefficient of " << correlation << endl;
+
+  // build a regression model
+  tuple<double, double> model  = regression(Maxima, Total, n);
+  double m = get<0>(model);
+  double b = get<1>(model);
+
+  cout << "Regression model for " << Maxima->field->content;
+  cout << " and " << Total->field->content;
+  cout << ": y = " << m << "x + " << b << endl;
+
+  // predict a value
+  cout << "ŷ for x = 51.9 is " << predict(51.9, model) << endl;
+  cout << "ŷ for x = 140.2 is " << predict(140.2, model) << endl;
 
   return 0;
 }

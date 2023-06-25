@@ -62,10 +62,20 @@ void File::add(string content) {
         // set header name
         new_field->header = get_header(new_field->column, headers);
 
+        // set vertical links
+        if (new_field->header->first_field == nullptr) {
+          new_field->header->first_field = new_field;
+          new_field->header->last_field = new_field;
+        } else {
+          new_field->above = new_field->header->last_field;
+          new_field->header->last_field->below = new_field;
+          new_field->header->last_field = new_field;
+        }
+
         // calculate header total and average
         new_field->header->total = new_field->header->total 
           + parse_double(observation);
-        int observation_rows = (last->row - headers->row) +  1;
+        int observation_rows = (last->row - headers->row);
         new_field->header->average =
           new_field->header->total / observation_rows;
       }

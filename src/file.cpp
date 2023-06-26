@@ -1,3 +1,6 @@
+#include <fstream>
+#include <iostream>
+#include <string>
 #include "file.hpp"
 #include "header.hpp"
 
@@ -118,20 +121,97 @@ void File::print_interactively(string option) {
   while (current != nullptr) {
     cout << "Line " << current->row << ": " << current->content << endl;
 
-    cout << "\n n: next line \n p: previous line \n any other key: exit\n > ";
-    char input;
+    cout << "\n n: next line \n p: previous line \n e: exit\n";
+    cout << " line number: go to line\n > ";
+    string input;
     cin >> input;
     cout << "\n";
 
-    if (input == 'n') {
+    if (input == "e") {
+      break;
+    } else if (input == "n") {
       current = current->next;
-    } else if (input == 'p' && current->previous != nullptr) {
+    } else if (input == "p" && current->previous != nullptr) {
       current = current->previous;
     } else if (current->previous == nullptr) {
       cout << " [!] Invalid position \n";
     } else {
-      cout << " Exiting\n";
-      break;
+      current = traverse_lines(first, stoi(input) - 1);
     }
   }
 }
+
+void File::write() {
+  ofstream outfile;
+  outfile.open ("out.csv");
+  Line* current = first;
+    current = headers->next;
+  while (current != nullptr) {
+    outfile << current->content << endl;
+    current = current->next;
+  }
+  outfile.close();
+}
+
+int File::menu() {
+  int option = 0;
+  while (option == 0) {
+    cout << ".---------------------------------------." << endl;
+    cout << "|                                       |" << endl;
+    cout << "|             clana 0.1.0               |" << endl;
+    cout << "|                                       |" << endl;
+    cout << "|  1. Print all data                    |" << endl;
+    cout << "|  2. Print data interactively          |" << endl;
+    cout << "|  3. Write current data to file        |" << endl;
+    cout << "|  4. Find gaps                         |" << endl;
+    cout << "|  5. Get correlation                   |" << endl;
+    cout << "|  6. Exit                              |" << endl;
+    cout << "|                                       |" << endl;
+    cout << "|  Enter your choice below and press    |" << endl;
+    cout << "|  return to continue:                  |" << endl;
+    cout << "'---------------------------------------'" << endl;
+    cout << "  > ";
+    if(!(cin >> option)) {
+      cin.clear();
+      cin.ignore(numeric_limits<streamsize>::max(), '\n');
+      option = 0;
+    } else if (option < 1 || option > 7) {
+      option = 0;
+    }
+  }
+  return option;
+}
+
+void File::find_gaps() {
+  cout << "Type the title of the column to search:" << endl;
+  string title = "";
+  getline(cin, title);
+  cin.clear();
+  int column = get_column(title, headers);
+  Header* header = traverse_headers(headers, 1, column);
+  Field* found_gap = column_gap_scan(header, first, last);
+  cout << "Gap found at row " << found_gap->line->row << endl;
+}
+
+void File::show_correlation() {
+  cout << "Type the title of two columns to correlate:" << endl;
+  string a_title = "";
+  string b_title = "";
+
+  getline(cin, a_title);
+  cin.clear();
+  getline(cin, b_title);
+  cin.clear();
+  int a_column = get_column(a_title, headers);
+  int b_column = get_column(b_title, headers);
+  
+  Header* a_header = traverse_headers(headers, 1, a_column);
+  Header* b_header = traverse_headers(headers, 1, b_column);
+  double n = last->row - headers->row - 1;
+
+  double correlation = get_correlation(a_header, b_header, n);
+
+  cout << "Correlation is " << correlation << endl;
+}
+
+

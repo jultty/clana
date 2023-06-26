@@ -1,6 +1,7 @@
 #ifndef CLANA_FILE_H
 #define CLANA_FILE_H
 #include <string>
+#include <limits>
 #include "line.hpp"
 #include "field.hpp"
 #include "header.hpp"
@@ -22,6 +23,10 @@ class File {
     void add(string content);
     void print(string option);
     void print_interactively(string option);
+    void write();
+    int menu();
+    void find_gaps();
+    void show_correlation();
 };
 
 #endif

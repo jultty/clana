@@ -149,7 +149,19 @@ void gap_average_solver(Header* header, Line* start, Line* end) {
   }
 }
 
-void gap_regression_solver(Header* header, Line* start, Line* end, tuple<double, double> model) {
+void range_average_solver(Header* start, Header* end) {
+  Header* current = start;
+
+  while (current != nullptr && current != end->next) {
+
+    gap_average_solver(current, current->first_field->line,
+        current->last_field->line);
+
+    current = current->next;
+  }
+}
+
+void gap_regression_solver(Header* header, Line* start, Line* end, tuple<double, double> model, Header* correlated) {
 
   Field* current = header->first_field;
 
@@ -160,8 +172,13 @@ void gap_regression_solver(Header* header, Line* start, Line* end, tuple<double,
     // if field is a gap and within range, set content to a predicted value
     if (current->content == "") {
       if (field_row >= start->row && field_row <= end->row) {
-        double predicted_value =
-          predict(current->header->average, model);
+
+        Field* correlated_field = get_field(current->line, 
+            current->line->row, correlated->column);
+
+        double correlated_value = parse_double(correlated_field->content);
+
+        double predicted_value = predict(correlated_value, model);
         current->content = to_string(predicted_value);
       }
     }
@@ -174,25 +191,13 @@ void gap_regression_solver(Header* header, Line* start, Line* end, tuple<double,
   }
 }
 
-void range_average_solver(Header* start, Header* end) {
+void range_regression_solver(Header* start, Header* end, tuple<double, double> model, Header* correlated) {
   Header* current = start;
 
-  while (current != nullptr) {
-
-    gap_average_solver(current, current->first_field->line,
-        current->last_field->line);
-
-    current = current->next;
-  }
-}
-
-void range_regression_solver(Header* start, Header* end, tuple<double, double> model) {
-  Header* current = start;
-
-  while (current != nullptr) {
+  while (current != nullptr && current != end->next) {
 
     gap_regression_solver(current, current->first_field->line,
-        current->last_field->line, model);
+        current->last_field->line, model, correlated);
 
     current = current->next;
   }
@@ -201,13 +206,13 @@ void range_regression_solver(Header* start, Header* end, tuple<double, double> m
 double parse_double(string observation) {
   string parsed_observation = "";
   for (char character : observation) {
-        if (character == ',') {
+        if (character == ',' || character == '.') {
           parsed_observation.push_back('.');
         }
           else if (isdigit(character)) {
           parsed_observation.push_back(character);
         } else {
-          parsed_observation = "0";
+          parsed_observation = "";
         }
     }
 

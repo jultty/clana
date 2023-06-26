@@ -54,29 +54,6 @@ int main () {
   cout << "ŷ for x = 51.9 is " << predict(51.9, model) << endl;
   cout << "ŷ for x = 140.2 is " << predict(140.2, model) << endl;
 
-  // find the first gap
-  Line* range_start = traverse_lines(file.first, 44);
-  Line* range_end = traverse_lines(file.first, 85);
-  Field* gap = range_gap_scan(range_start, range_end);
-
-  cout << "Gap scan from row " << range_start->row;
-  cout << " found a gap on row " << gap->line->row << ", column ";
-  cout << gap->column << " (" << gap->header->field->content << ")\n";
-
-  // solve gaps with column average
-  range_average_solver(gap->header, file.last_header);
-
-  // re-scan
-  Field* average_solved_gap = range_gap_scan(range_start, range_end);
-  cout << "After average solving, scan found the first gap on row "; 
-  cout << average_solved_gap->line->row << ", column ";
-  cout << average_solved_gap->column << endl;
-
-  Field* solved_gap = get_field(file.headers, 72, 42);
-  cout << "Previous first gap now has value " << solved_gap->content;
-  cout << " while its header has average ";
-  cout << solved_gap->header->average << endl;
-
   Field* Maxima_gap = column_gap_scan(Maxima, file.headers, file.last);
   Field* Total_gap = column_gap_scan(Total, file.headers, file.last);
 
@@ -86,36 +63,24 @@ int main () {
   cout << "Scan on column " << Total->field->content;
   cout << " found a gap on row " << Total_gap->line->row << endl;
 
-  cout << "Solving gap on " << Maxima->field->content << " with the average solver\n";
+  Field* solved_Maxima_gap = get_field(file.headers, 109, 5);
+  cout << "\nSolving gap on " << Maxima->field->content << " with the average solver\n";
 
-  range_average_solver(Maxima, file.last_header);
-
-  cout << "Scanning again...\n";
+  range_average_solver(Maxima, Maxima);
   Maxima_gap = column_gap_scan(Maxima, file.headers, file.last);
-  if (Maxima_gap == nullptr) {
-    cout << "No gap found on column\n";
-  } else {
-    cout << "Scan on column " << Maxima->field->content;
-    cout << " found a gap on row " << Maxima_gap->line->row << endl;
-  }
+  solved_Maxima_gap = get_field(file.headers, 109, 5);
+  if (Maxima_gap == nullptr)
+    cout << "Gap now has value " << solved_Maxima_gap->content;
 
-  cout << "Solving gap on " << Total->field->content << " with the regression solver\n";
-  range_regression_solver(Total, Total, model);
-
-  cout << "Scanning again...\n";
-  Total_gap = column_gap_scan(Total, file.headers, file.last);
-
-  Total_gap = column_gap_scan(Total, file.headers, file.last);
-  if (Total_gap == nullptr) {
-    cout << "No gap found on column\n";
-  } else {
-    cout << "Scan on column " << Total->field->content;
-    cout << " found a gap on row " << Total_gap->line->row << endl;
-  }
-
+  cout << "\nSolving gap on " << Total->field->content << " with the regression solver\n";
   Field* solved_Total_gap = get_field(file.headers, 109, 6);
-  cout << "Gap on column " << solved_Total_gap->header->field->content;
-  cout << " now has value " << solved_Total_gap->content;
+
+  range_regression_solver(Total, Total, model, Maxima);
+  Total_gap = column_gap_scan(Total, file.headers, file.last);
+  solved_Total_gap = get_field(file.headers, 109, 6);
+
+  if (Total_gap == nullptr)
+    cout << "Gap now has value " << solved_Total_gap->content;
 
   cout << endl;
 

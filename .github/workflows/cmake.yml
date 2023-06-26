@@ -22,12 +22,8 @@ jobs:
       working-directory: ${{github.workspace}}/build
       run: cp ../data/source/chuvas_T_01340039.csv in.csv
 
-    - name: Copy mock data
-      working-directory: ${{github.workspace}}/build
-      run: cp ../data/mock.csv .
-
     - name: Run 
       working-directory: ${{github.workspace}}/build
-      run: ./clana 
+      run: ./clana --non-interactive
 
 

@@ -27,6 +27,8 @@ class File {
     int menu();
     void find_gaps();
     void show_correlation();
+    void average_solve();
+    void regression_solve();
 };
 
 #endif

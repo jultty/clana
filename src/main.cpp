@@ -22,27 +22,35 @@ int main () {
   // set number notation and precision
   cout << fixed << setprecision(4);
 
-  /* int choice = file.menu(); */
-  int choice = 6;
+  int choice = 0;
+  while (choice != 8) {
+    choice = file.menu();
 
-  switch (choice) {
-    case 1:
-      file.print("all");
-      break;
-    case 2:
-      file.print_interactively("all");
-      break;
-    case 3:
-      file.write();
-      break;
-    case 4:
-      file.find_gaps();
-      break;
-    case 5:
-      file.show_correlation();
-      break;
-    case 6:
-      break;
+    switch (choice) {
+      case 1:
+        file.print("all");
+        break;
+      case 2:
+        file.print_interactively("all");
+        break;
+      case 3:
+        file.write();
+        break;
+      case 4:
+        file.find_gaps();
+        break;
+      case 5:
+        file.show_correlation();
+        break;
+      case 6:
+        file.average_solve();
+        break;
+      case 7:
+        file.regression_solve();
+        break;
+      case 8:
+        break;
+    }
   }
 
   return 0;

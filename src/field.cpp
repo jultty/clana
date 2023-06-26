@@ -71,21 +71,21 @@ Field* range_gap_scan(Line* start, Line* end) {
           } 
         } 
 
-          // if there are still fields to scan
-          if (gap->next != nullptr) {
-            gap = gap->next;
-          }
-          else {
-            break;
-          }
+        // if there are still fields to scan
+        if (gap->next != nullptr) {
+          gap = gap->next;
+        }
+        else {
+          break;
         }
       }
-      // move to next line
-      if (line->next != nullptr) {
-        line = line->next;
-      }
     }
+    // move to next line
+    if (line->next != nullptr) {
+      line = line->next;
+    }
+  }
 
-    return gap;
-  };
+  return gap;
+};
 

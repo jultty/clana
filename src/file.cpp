@@ -103,6 +103,14 @@ void File::add(string content) {
   }
 }
 
+void wait_dialog() {
+  string back_dialog;
+  cout << "\nTask completed. Press return to go back: ";
+  cin.get();
+  cin.ignore(32767, '\n');
+  cin.clear();
+}
+
 // print all lines
 void File::print(string option) {
   Line* current = first;
@@ -112,6 +120,8 @@ void File::print(string option) {
     cout << "Line " << current->row << ": " << current->content << endl;
     current = current->next;
   }
+  wait_dialog();
+  cin.clear();
 }
 
 void File::print_interactively(string option) {
@@ -143,19 +153,46 @@ void File::print_interactively(string option) {
 
 void File::write() {
   ofstream outfile;
-  outfile.open ("out.csv");
-  Line* current = first;
-    current = headers->next;
+  outfile.open("out.csv");
+  Line* current = headers;
+  Field* current_field = current->first_field;
+
   while (current != nullptr) {
-    outfile << current->content << endl;
-    current = current->next;
+    while (current_field != nullptr) {
+      outfile << current_field->content;
+      if (current_field != current->last_field) {
+        outfile << ";";
+      }
+      if (current_field->next != nullptr) {
+        current_field = current_field->next;
+      } else {
+        break;
+      }
+    }
+    if (current->next != nullptr) {
+      outfile << "\n";
+      current = current->next;
+      current_field = current->first_field;
+    } else {
+      break;
+    }
   }
   outfile.close();
+  wait_dialog();
+}
+
+void clear_screen() {
+#ifdef _WIN32
+    system("cls");
+#elif __linux__
+    system("clear");
+#endif
 }
 
 int File::menu() {
   int option = 0;
   while (option == 0) {
+    clear_screen();
     cout << ".---------------------------------------." << endl;
     cout << "|                                       |" << endl;
     cout << "|             clana 0.1.0               |" << endl;
@@ -164,8 +201,10 @@ int File::menu() {
     cout << "|  2. Print data interactively          |" << endl;
     cout << "|  3. Write current data to file        |" << endl;
     cout << "|  4. Find gaps                         |" << endl;
-    cout << "|  5. Get correlation                   |" << endl;
-    cout << "|  6. Exit                              |" << endl;
+    cout << "|  5. Show correlation                  |" << endl;
+    cout << "|  6. Solve gaps with average           |" << endl;
+    cout << "|  7. Solve gaps with regression        |" << endl;
+    cout << "|  8. Exit                              |" << endl;
     cout << "|                                       |" << endl;
     cout << "|  Enter your choice below and press    |" << endl;
     cout << "|  return to continue:                  |" << endl;
@@ -175,7 +214,7 @@ int File::menu() {
       cin.clear();
       cin.ignore(numeric_limits<streamsize>::max(), '\n');
       option = 0;
-    } else if (option < 1 || option > 7) {
+    } else if (option < 1 || option > 8) {
       option = 0;
     }
   }
@@ -185,33 +224,141 @@ int File::menu() {
 void File::find_gaps() {
   cout << "Type the title of the column to search:" << endl;
   string title = "";
-  getline(cin, title);
+  cin >> title;
   cin.clear();
   int column = get_column(title, headers);
-  Header* header = traverse_headers(headers, 1, column);
+  Header* header = traverse_headers(headers, 0, column);
   Field* found_gap = column_gap_scan(header, first, last);
-  cout << "Gap found at row " << found_gap->line->row << endl;
+  if (found_gap != nullptr) {
+    cout << "Gap found at row " << found_gap->line->row;
+    cout << " of column " << found_gap->column << " (";
+    cout << found_gap->header->field->content << ")\n";
+  } else {
+    cout << "No gap found\n";
+  }
+  wait_dialog();
+  
 }
 
 void File::show_correlation() {
-  cout << "Type the title of two columns to correlate:" << endl;
+  cout << "Provide the headers for the two columns and press return:" << endl;
   string a_title = "";
   string b_title = "";
 
-  getline(cin, a_title);
+  cout << "First column: ";
+  cin >> a_title;
   cin.clear();
-  getline(cin, b_title);
+  cout << "Second column: ";
+  cin >> b_title;
   cin.clear();
   int a_column = get_column(a_title, headers);
   int b_column = get_column(b_title, headers);
   
-  Header* a_header = traverse_headers(headers, 1, a_column);
-  Header* b_header = traverse_headers(headers, 1, b_column);
+  Header* a_header = traverse_headers(headers, 0, a_column);
+  Header* b_header = traverse_headers(headers, 0, b_column);
   double n = last->row - headers->row - 1;
 
   double correlation = get_correlation(a_header, b_header, n);
 
   cout << "Correlation is " << correlation << endl;
+  wait_dialog();
 }
 
+void File::average_solve() {
+  cout << "Provide two headers for the beginning and end of the range\n";
+  cout << "To modify a single column, provide its header twice\n";
+  string a_title = "";
+  string b_title = "";
 
+  cout << "First column: ";
+  cin >> a_title;
+  cin.clear();
+  cout << "Second column: ";
+  cin >> b_title;
+  cin.clear();
+
+  int a_column = get_column(a_title, headers);
+  int b_column = get_column(b_title, headers);
+  
+  Header* a_header = traverse_headers(headers, 0, a_column);
+  Header* b_header = traverse_headers(headers, 0, b_column);
+
+  range_average_solver(a_header, b_header);
+
+  cout << "Done. Now running a gap scan on this range\n";
+  Field* a_gap = column_gap_scan(a_header, headers, last);
+  Field* b_gap = column_gap_scan(b_header, headers, last);
+  if (a_gap == nullptr && b_gap == nullptr)
+    cout << "Success: No gaps found\n";
+
+  wait_dialog();
+}
+
+void File::regression_solve() {
+  
+  cout << "Provide two headers for the beginning and end of the range\n";
+  cout << "To modify a single column, provide its header twice\n";
+  string a_title = "";
+  string b_title = "";
+
+  cout << "First column: ";
+  cin >> a_title;
+  cin.clear();
+  cout << "Second column: ";
+  cin >> b_title;
+  cin.clear();
+
+  int a_column = get_column(a_title, headers);
+  int b_column = get_column(b_title, headers);
+  
+  Header* a_header = traverse_headers(headers, 0, a_column);
+  Header* b_header = traverse_headers(headers, 0, b_column);
+
+  cout << "Provide two headers to build the regression model\n";
+
+  string a_model_title, b_model_title;
+
+  cout << "First column: ";
+  cin >> a_model_title;
+  cin.clear();
+  cout << "Second column: ";
+  cin >> b_model_title;
+  cin.clear();
+
+  int a_model_column = get_column(a_model_title, headers);
+  int b_model_column = get_column(b_model_title, headers);
+  
+  Header* a_model_header = traverse_headers(headers, 0, a_model_column);
+  Header* b_model_header = traverse_headers(headers, 0, b_model_column);
+  double n = last->row - headers->row - 1;
+
+  double correlation = get_correlation(a_model_header, b_model_header, n);
+  tuple<double, double> model  = regression(a_model_header, b_model_header, n);
+  double m = get<0>(model);
+  double b = get<1>(model);
+
+  cout << "Model is ready with correlation coefficient of " << correlation;
+  cout << "\nThe equation for " << a_model_header->field->content << " and ";
+  cout << b_model_header->field->content << " is: y = " << m << "x + ";
+  cout << b << endl;
+
+  string correlated_title;
+
+  cout << "Enter the header for the column to use for your X value: ";
+
+  cin >> correlated_title;
+  cin.clear();
+
+  int correlated_column = get_column(correlated_title, headers);
+  Header* correlated_header = traverse_headers(headers, 0, correlated_column);
+
+  range_regression_solver(a_model_header, b_model_header, model, correlated_header);
+
+  cout << "Done. Now running a gap scan on this range\n";
+  Field* a_gap = column_gap_scan(a_header, headers, last);
+  Field* b_gap = column_gap_scan(b_header, headers, last);
+  if (a_gap == nullptr && b_gap == nullptr)
+    cout << "Success: No gaps found\n";
+
+  wait_dialog();
+}

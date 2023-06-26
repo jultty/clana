@@ -72,12 +72,12 @@ int count_headers(string content) {
 
 // search for a column by its header
 int get_column(string header, Line* headers) {
-  Field* start = traverse_fields(headers, 1, 1);
+  Field* current = headers->first_field;
 
-  while (header != start->content) {
-    start = start->next;
+  while (current->content != header) {
+    current = current->next;
   }
-  return start->column;
+  return current->column;
 };
 
 // finds gaps in columns, returns first match
